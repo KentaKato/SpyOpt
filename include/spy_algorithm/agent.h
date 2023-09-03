@@ -4,6 +4,7 @@
 #include <vector>
 #include <functional>
 #include <random>
+#include <iostream>
 
 namespace spy
 {
@@ -12,20 +13,29 @@ class Agent
 {
 
 public:
-    Agent(const std::vector<double> init_pos,
-          std::function<double(const std::vector<double>&)> objective_func);
-
+    explicit Agent(const std::vector<double> init_pos,
+                   std::function<double(const std::vector<double>&)> objective_func,
+                   const std::vector<double> lower_bounds,
+                   const std::vector<double> upper_bounds,
+                   const std::mt19937 &rand_engine);
     double fitness;
 
     void swingMove(size_t time, double swing_factor);
-    void moveToward(const Agent &better_agent);
+    // void moveToward(const Agent &better_agent);
 
     friend bool operator<(const Agent& lhs, const Agent& rhs);
 
+    friend std::ostream& operator<<(std::ostream& os, const Agent& agent);
+
 private:
-    size_t dimension_;
+    void clipPosition();
+
     std::vector<double> position_;
+    std::vector<double> lower_bounds_, upper_bounds_;
     std::function<double(const std::vector<double>&)> objective_func_;
+
+    std::mt19937 rand_engine_;
+    std::uniform_real_distribution<> uniform_dist_;
 
 };
 

@@ -1,0 +1,5 @@
+num_agents: 100
+num_iterations: 1000
+swing_factor: 1
+lower_bounds: [0., 0.]
+upper_bounds: [1., 2.]
