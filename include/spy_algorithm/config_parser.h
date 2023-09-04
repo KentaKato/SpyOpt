@@ -1,10 +1,13 @@
-#ifndef SPY_ALGORITHM__YAML_UTILS_H
-#define SPY_ALGORITHM__YAML_UTILS_H
+#ifndef SPY_ALGORITHM__CONFIG_PARSER_H
+#define SPY_ALGORITHM__CONFIG_PARSER_H
 
 #include <yaml-cpp/yaml.h>
+#include "spy_algorithm/spy_algorithm.h"
 
 namespace spy
 {
+
+[[nodiscard]] bool parseConfig(const std::string &config_path, Config &config);
 
 template <typename T>
 bool safeLoadScalar(const YAML::Node &node, const std::string &key, T &value)
@@ -19,7 +22,7 @@ bool safeLoadScalar(const YAML::Node &node, const std::string &key, T &value)
 }
 
 template <typename T>
-bool safeLoadVector(const YAML::Node& node, const std::string& key, std::vector<T>& vec)
+bool safeLoadVector(const YAML::Node &node, const std::string &key, std::vector<T> &vec)
 {
     if (node[key] && node[key].IsSequence())
     {

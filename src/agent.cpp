@@ -13,30 +13,46 @@ Agent::Agent(const std::vector<double> init_pos,
       lower_bounds_(lower_bounds),
       upper_bounds_(upper_bounds),
       rand_engine_(rand_engine),
-      uniform_dist_(0., 1.),
       fitness(objective_func(init_pos))
 {
 }
 
 void Agent::swingMove(size_t time, double swing_factor)
 {
+    static std::uniform_real_distribution<> uniform_dist(-1, 1);
+    for(size_t i = 0, n = position_.size(); i < n; ++i)
     for(auto &pos : position_) {
-        pos += uniform_dist_(rand_engine_) * (swing_factor / time);
+        pos += uniform_dist(rand_engine_) * (swing_factor / time);
     }
     this->clipPosition();
     fitness = objective_func_(position_);
 }
 
-// void Agent::moveToward(const Agent &better_agent)
-// {
-//     std::uniform_real_distribution<> dis(-1, 1);
+void Agent::moveToward(const Agent &better_agent)
+{
+    static std::uniform_real_distribution<> uniform_dist(-1, 1);
+    for(size_t i = 0, n = position_.size(); i < n; ++i)
+    {
+        position_[i] += uniform_dist(rand_engine_) * (better_agent.getPosition()[i] - position_[i]);
+    }
+    fitness = objective_func_(position_);
+}
 
-//     for(int i = 0; i < dimension_; ++i) {
-//         position_[i] += dis(gen) * (better_agent.position_[i] - position_[i]);
-//     }
+void Agent::randomSearch()
+{
+    static std::uniform_real_distribution<> uniform_dist(0, 1);
+    for (size_t i = 0, n = position_.size(); i < n; ++i)
+    {
+        const double range = upper_bounds_[i] - lower_bounds_[i];
+        position_[i] = lower_bounds_[i] + range * uniform_dist(rand_engine_);
+    }
+    fitness = objective_func_(position_);
+}
 
-//     fitness = objective_func_(position_);
-// }
+const std::vector<double>& Agent::getPosition() const
+{
+    return position_;
+}
 
 void Agent::clipPosition()
 {

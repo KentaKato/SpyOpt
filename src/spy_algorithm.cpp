@@ -1,24 +1,23 @@
 #include <algorithm>
-#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <yaml-cpp/yaml.h>
 
 #include "spy_algorithm/spy_algorithm.h"
-#include "spy_algorithm/yaml_utils.h"
 
 namespace spy
 {
 
-SpyAlgorithm::SpyAlgorithm(const std::string& config_file,
-                           std::function<double(const std::vector<double>&)> objective_func)
-                           : uniform_dist_(0., 1.)
-{
-    if (!this->loadConfig(config_file))
-    {
-        throw std::invalid_argument("Failed to load the config file: " + config_file);
-    }
+/* Public methods */
 
+SpyAlgorithm::SpyAlgorithm(const Config &config,
+                           std::function<double(const std::vector<double>&)> objective_func)
+                           : config_(config), uniform_dist_(0., 1.)
+{
+    if (!this->validateConfig())
+    {
+        throw std::invalid_argument("Invalid config is given!");
+    }
     std::random_device rd;
     rand_engine_.seed(rd());
     this->generateAgents(objective_func);
@@ -26,15 +25,24 @@ SpyAlgorithm::SpyAlgorithm(const std::string& config_file,
 
 void SpyAlgorithm::optimize()
 {
-    for(int t = 1; t < config_.num_iterations; ++t)
+    static const size_t num_high_mid = config_.num_high_rank + config_.num_mid_rank;
+
+    for(size_t t = 1; t < config_.num_iterations; ++t)
     {
-        for(auto &agent : agents_) {
-            if(&agent == &agents_.front())
+        for(size_t i = 0, n = agents_.size(); i < n; ++i)
+        {
+            if(i < config_.num_high_rank)
             {
-                agent.swingMove(t, config_.swing_factor);
-            } else {
-                // int betterAgentIndex = std::rand() % (&agent - &agents.front());
-                // agent.moveToward(agents[betterAgentIndex]);
+                agents_[i].swingMove(t, config_.swing_factor);
+            }
+            else if (i < num_high_mid)
+            {
+                std::uniform_int_distribution<> rand(0, i-1);
+                agents_[i].moveToward(agents_[rand(rand_engine_)]);
+            }
+            else
+            {
+                agents_[i].randomSearch();
             }
         }
         this->sortAgents();
@@ -53,9 +61,9 @@ void SpyAlgorithm::optimize()
     this->printAgents();
 }
 
-double SpyAlgorithm::getBestFitness() const
+std::tuple<double, std::vector<double>> SpyAlgorithm::getBestFitness() const
 {
-    return agents_.front().fitness;
+    return {agents_.front().fitness, agents_.front().getPosition()};
 }
 
 void SpyAlgorithm::printAgents() const
@@ -65,6 +73,8 @@ void SpyAlgorithm::printAgents() const
         agents_.end(),
         [](const Agent &a){std::cout << "  " << a << std::endl;});
 }
+
+/* Private methods */
 
 void SpyAlgorithm::generateAgents(std::function<double(const std::vector<double>&)> objective_func)
 {
@@ -99,64 +109,45 @@ void SpyAlgorithm::sortAgents()
     std::sort(agents_.begin(), agents_.end());
 }
 
-bool SpyAlgorithm::loadConfig(const std::string &config_file)
+bool SpyAlgorithm::validateConfig()
 {
-    if (!std::filesystem::exists(config_file))
-    {
-        std::cerr << "[Error] Config file does not exist: " << config_file << std::endl;
-        return false;
-    }
-
-    try
-    {
-        YAML::Node c = YAML::LoadFile(config_file);
-
-        if (!safeLoadScalar(c, "num_agents", config_.num_agents) ||
-            !safeLoadScalar(c, "num_iterations", config_.num_iterations) ||
-            !safeLoadScalar(c, "swing_factor", config_.swing_factor) ||
-            !safeLoadVector(c, "lower_bounds", config_.lower_bounds) ||
-            !safeLoadVector(c, "upper_bounds", config_.upper_bounds))
+        bool ret = true;
+        if (config_.num_agents <= 0 || config_.num_high_rank <= 0 || config_.num_mid_rank <= 0)
         {
-            return false;
+            std::cerr
+                << "[Error] 'num_agent', 'num_hign_rank' and 'num_mid_rank' should be "
+                << "greater than zero." << std::endl;
+            ret = false;
         }
-        config_.input_dim = config_.lower_bounds.size();
-
-        /* Validation */
-        if (config_.num_agents <= 0)
+        if (config_.num_agents <= config_.num_high_rank + config_.num_mid_rank)
         {
-            std::cerr << "[Error] 'num_agent' should be greater than zero." << std::endl;
-            return false;
+            std::cerr
+                << "[Error] 'num_agent' should be greater than (num_high_rank + num_mid_rank)."
+                << std::endl;
+            ret = false;
         }
-
         if (config_.num_iterations <= 0)
         {
             std::cerr << "[Error] 'num_iteration' should be greater than zero." << std::endl;
-            return false;
+            ret = false;
         }
-
         if (config_.lower_bounds.size() != config_.upper_bounds.size())
         {
-            std::cerr << "[Error] 'lower_bounds' and 'upper_bounds' should have the same length." << std::endl;
-            return false;
+            std::cerr
+                << "[Error] 'lower_bounds' and 'upper_bounds' should have the same length."
+                << std::endl;
+            ret = false;
         }
-
         // Ensure upper_bound > lower_bound
         for (size_t i = 0, n = config_.lower_bounds.size(); i < n; ++i)
         {
             if (config_.upper_bounds[i] <= config_.lower_bounds[i])
             {
                 std::cerr << "[Error] 'upper_bounds' should be greater than 'lower_bounds'." << std::endl;
-                return false;
+                ret = false;
             }
         }
-    }
-    catch (const YAML::Exception& e)
-    {
-        std::cerr << "[Error] Failed to parse the config file: " << e.what() << std::endl;
-        return false;
-    }
-    return true;
+        return ret;
 }
-
 
 } // namespace spy

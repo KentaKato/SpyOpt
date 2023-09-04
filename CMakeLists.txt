@@ -14,6 +14,7 @@ include_directories(
 add_library(${PROJECT_NAME}
     src/agent.cpp
     src/spy_algorithm.cpp
+    src/config_parser.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

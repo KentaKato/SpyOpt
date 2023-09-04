@@ -21,10 +21,11 @@ public:
     double fitness;
 
     void swingMove(size_t time, double swing_factor);
-    // void moveToward(const Agent &better_agent);
+    void moveToward(const Agent &better_agent);
+    void randomSearch();
+    const std::vector<double>& getPosition() const;
 
     friend bool operator<(const Agent& lhs, const Agent& rhs);
-
     friend std::ostream& operator<<(std::ostream& os, const Agent& agent);
 
 private:
@@ -35,8 +36,6 @@ private:
     std::function<double(const std::vector<double>&)> objective_func_;
 
     std::mt19937 rand_engine_;
-    std::uniform_real_distribution<> uniform_dist_;
-
 };
 
 } // namespace spy
