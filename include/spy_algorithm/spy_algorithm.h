@@ -17,6 +17,7 @@ struct Config
     std::vector<double> lower_bounds, upper_bounds;
     size_t input_dim;
 };
+std::ostream& operator<<(std::ostream& os, const Config& config);
 
 class SpyAlgorithm
 {
@@ -27,13 +28,18 @@ public:
     void optimize();
 
     // return [fitness, position]
-    std::tuple<double, std::vector<double>> getBestFitness() const;
+    std::pair<double, std::vector<double>> getBestFitness() const;
     void printAgents() const;
+    void printBestAgent() const;
 
 private:
     void generateAgents(std::function<double(const std::vector<double>&)> objective_func);
     void sortAgents();
-    [[nodiscard]] bool validateConfig();
+    void validateConfig() const;
+    std::vector<double> generateRandomPosition();
+    void printInitialConditions() const;
+    void printFinalConditions() const;
+    void printProgress(size_t iteration);
 
     std::vector<Agent> agents_;
 
@@ -41,9 +47,7 @@ private:
     std::uniform_real_distribution<> uniform_dist_;
 
     Config config_;
-
-
-
+    size_t last_printed_progress_ = 0;
 };
 
 } // namespace spy

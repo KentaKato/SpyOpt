@@ -25,23 +25,13 @@ int main()
         std::cerr << "[Error] Failed to parse config!" << std::endl;
         return -1;
     }
+    std::cout << config << std::endl;
 
     SpyAlgorithm spy_alg(config, objective);
     spy_alg.optimize();
     const auto [fitness, pos] = spy_alg.getBestFitness();
-    std::cout << "Best solution:"
-        << "\n  fitness: " << fitness
-        << "\n  position: [";
-
-    for (auto it = pos.begin(); it != pos.end(); ++it)
-    {
-        if (it != pos.begin())
-        {
-            std::cout << ", ";
-        }
-        std::cout << *it;
-    }
-    std::cout << "]" << std::endl;
+    std::cout << "Best solution:" << std::endl;
+    spy_alg.printBestAgent();
 
     return 0;
 }
