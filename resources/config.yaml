@@ -2,8 +2,8 @@ num_agents:    100  # greater than (num_high_rank + num_mid_rank)
 num_high_rank: 10
 num_mid_rank:  30
 
-num_iterations: 1000
+num_iterations: 50
 
 swing_factor: 1
-lower_bounds: [0., 0., 0., 0., 0.]
-upper_bounds: [5., 5., 5., 5., 5.]
+lower_bounds: [-10., -10.]
+upper_bounds: [10., 10.]

@@ -5,7 +5,7 @@
 #include <vector>
 #include "SpyOpt/agent.h"
 
-namespace spy
+namespace spy_opt
 {
 
 struct Config
@@ -31,10 +31,12 @@ public:
     std::pair<double, std::vector<double>> getBestFitness() const;
     void printAgents() const;
     void printBestAgent() const;
+    void dumpHistory(const std::string &filename);
 
 private:
     void generateAgents(std::function<double(const std::vector<double>&)> objective_func);
-    void sortAgents();
+    void sortAgentsByFitness();
+    void sortAgentsByID();
     void validateConfig() const;
     std::vector<double> generateRandomPosition();
     void printInitialConditions() const;
@@ -50,6 +52,6 @@ private:
     size_t last_printed_progress_ = 0;
 };
 
-} // namespace spy
+} // namespace spy_opt
 
 #endif

@@ -4,7 +4,7 @@
 #include <yaml-cpp/yaml.h>
 #include "SpyOpt/spy_opt.h"
 
-namespace spy
+namespace spy_opt
 {
 
 [[nodiscard]] bool parseConfig(const std::string &config_path, Config &config);
@@ -41,6 +41,6 @@ bool safeLoadVector(const YAML::Node &node, const std::string &key, std::vector<
     return false;
 }
 
-} // namespace spy
+} // namespace spy_opt
 
 #endif

@@ -1,20 +1,25 @@
 #include "SpyOpt/agent.h"
 
-namespace spy
+namespace spy_opt
 {
 
-Agent::Agent(const std::vector<double> init_pos,
+Agent::Agent(size_t id,
+             const std::vector<double> init_pos,
              std::function<double(const std::vector<double>&)> objective_func,
              const std::vector<double> lower_bounds,
              const std::vector<double> upper_bounds,
+             size_t max_iteration,
              const std::mt19937 &rand_engine)
-    : position_(init_pos),
+    : id(id),
+      position_(init_pos),
       objective_func_(objective_func),
       lower_bounds_(lower_bounds),
       upper_bounds_(upper_bounds),
       rand_engine_(rand_engine),
       fitness(objective_func(init_pos))
 {
+    history.reserve(max_iteration);
+    history.push_back(position_);
 }
 
 void Agent::swingMove(size_t time, double swing_factor)
@@ -26,6 +31,8 @@ void Agent::swingMove(size_t time, double swing_factor)
     }
     this->clipPosition();
     fitness = objective_func_(position_);
+    history.push_back(position_);
+    if (fitness>700)std::cout << id << ", " << fitness << ", [" << position_[0] << ", " << position_[1] << "]" <<std::endl;
 }
 
 void Agent::moveToward(const Agent &better_agent)
@@ -36,6 +43,8 @@ void Agent::moveToward(const Agent &better_agent)
         position_[i] += uniform_dist(rand_engine_) * (better_agent.getPosition()[i] - position_[i]);
     }
     fitness = objective_func_(position_);
+    history.push_back(position_);
+    if (fitness>700)std::cout << id << ", " << fitness << ", [" << position_[0] << ", " << position_[1] << "]" <<std::endl;
 }
 
 void Agent::randomSearch()
@@ -47,6 +56,8 @@ void Agent::randomSearch()
         position_[i] = lower_bounds_[i] + range * uniform_dist(rand_engine_);
     }
     fitness = objective_func_(position_);
+    history.push_back(position_);
+    if (fitness>700)std::cout << id << ", " << fitness << ", [" << position_[0] << ", " << position_[1] << "]" <<std::endl;
 }
 
 const std::vector<double>& Agent::getPosition() const
@@ -69,7 +80,8 @@ bool operator<(const Agent &lhs, const Agent &rhs)
 
 std::ostream& operator<<(std::ostream& os, const Agent& agent)
 {
-    os << "pos: [";
+    os << "Agent ID: " << agent.id;
+    os << ", pos: [";
     for (auto it = agent.position_.begin(); it != agent.position_.end(); ++it)
     {
         if (it != agent.position_.begin())
@@ -78,8 +90,9 @@ std::ostream& operator<<(std::ostream& os, const Agent& agent)
         }
         os << *it;
     }
-    os << "],\tfitness: " << agent.fitness;
+    os << "]";
+    os << ", fitness: " << agent.fitness;
     return os;
 }
 
-} // namespace spy
+} // namespace spy_opt

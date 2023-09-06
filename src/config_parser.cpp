@@ -4,7 +4,7 @@
 #include "SpyOpt/spy_opt.h"
 #include "SpyOpt/config_parser.h"
 
-namespace spy
+namespace spy_opt
 {
 
 [[nodiscard]] bool parseConfig(const std::string &config_path, Config &config)
@@ -38,4 +38,4 @@ namespace spy
     return true;
 }
 
-} // namespace spy
+} // namespace spy_opt

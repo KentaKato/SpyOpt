@@ -6,19 +6,23 @@
 #include <random>
 #include <iostream>
 
-namespace spy
+namespace spy_opt
 {
 
 class Agent
 {
 
 public:
-    explicit Agent(const std::vector<double> init_pos,
+    explicit Agent(size_t id,
+                   const std::vector<double> init_pos,
                    std::function<double(const std::vector<double>&)> objective_func,
                    const std::vector<double> lower_bounds,
                    const std::vector<double> upper_bounds,
+                   size_t max_iteration,
                    const std::mt19937 &rand_engine);
+    size_t id;
     double fitness;
+    std::vector<std::vector<double>> history;
 
     void swingMove(size_t time, double swing_factor);
     void moveToward(const Agent &better_agent);
@@ -38,6 +42,6 @@ private:
     std::mt19937 rand_engine_;
 };
 
-} // namespace spy
+} // namespace spy_opt
 
 #endif
