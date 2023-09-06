@@ -1,4 +1,4 @@
-#include "spy_algorithm/agent.h"
+#include "SpyOpt/agent.h"
 
 namespace spy
 {

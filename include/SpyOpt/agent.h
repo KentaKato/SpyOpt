@@ -1,5 +1,5 @@
-#ifndef SPY_ALGORITHM__AGENT_H
-#define SPY_ALGORITHM__AGENT_H
+#ifndef SPY_OPT__AGENT_H
+#define SPY_OPT__AGENT_H
 
 #include <vector>
 #include <functional>

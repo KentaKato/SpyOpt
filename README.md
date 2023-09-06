@@ -1,1 +1,1 @@
-# spy_algorithm
+# SpyOpt

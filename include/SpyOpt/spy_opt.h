@@ -1,9 +1,9 @@
-#ifndef SPY_ALGORITHM__SPY_ALGORITHM_H
-#define SPY_ALGORITHM__SPY_ALGORITHM_H
+#ifndef SPY_OPT__SPY_OPT_H
+#define SPY_OPT__SPY_OPT_H
 
 #include <string>
 #include <vector>
-#include "spy_algorithm/agent.h"
+#include "SpyOpt/agent.h"
 
 namespace spy
 {
@@ -19,11 +19,11 @@ struct Config
 };
 std::ostream& operator<<(std::ostream& os, const Config& config);
 
-class SpyAlgorithm
+class SpyOpt
 {
 
 public:
-    explicit SpyAlgorithm(const Config &config,
+    explicit SpyOpt(const Config &config,
                           std::function<double(const std::vector<double>&)> objective_func);
     void optimize();
 

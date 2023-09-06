@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "spy_algorithm/config_parser.h"
-#include "spy_algorithm/spy_algorithm.h"
+#include "SpyOpt/config_parser.h"
+#include "SpyOpt/spy_opt.h"
 
 using namespace spy;
 
@@ -27,7 +27,7 @@ int main()
     }
     std::cout << config << std::endl;
 
-    SpyAlgorithm spy_alg(config, objective);
+    SpyOpt spy_alg(config, objective);
     spy_alg.optimize();
     const auto [fitness, pos] = spy_alg.getBestFitness();
     std::cout << "Best solution:" << std::endl;

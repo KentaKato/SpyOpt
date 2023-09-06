@@ -4,7 +4,7 @@
 #include <iomanip> // for std::setw
 #include <yaml-cpp/yaml.h>
 
-#include "spy_algorithm/spy_algorithm.h"
+#include "SpyOpt/spy_opt.h"
 
 namespace spy
 {
@@ -41,7 +41,7 @@ std::ostream& operator<<(std::ostream& os, const Config& config)
 
 /* Public methods */
 
-SpyAlgorithm::SpyAlgorithm(const Config &config,
+SpyOpt::SpyOpt(const Config &config,
                            std::function<double(const std::vector<double>&)> objective_func)
                            : config_(config), uniform_dist_(0., 1.)
 {
@@ -51,7 +51,7 @@ SpyAlgorithm::SpyAlgorithm(const Config &config,
     this->generateAgents(objective_func);
 }
 
-void SpyAlgorithm::optimize()
+void SpyOpt::optimize()
 {
     static const size_t num_high_mid = config_.num_high_rank + config_.num_mid_rank;
 
@@ -80,7 +80,7 @@ void SpyAlgorithm::optimize()
     // printAgents();
 }
 
-std::pair<double, std::vector<double>> SpyAlgorithm::getBestFitness() const
+std::pair<double, std::vector<double>> SpyOpt::getBestFitness() const
 {
     if (agents_.empty())
     {
@@ -90,7 +90,7 @@ std::pair<double, std::vector<double>> SpyAlgorithm::getBestFitness() const
     return {best_agent.fitness, best_agent.getPosition()};
 }
 
-void SpyAlgorithm::printAgents() const
+void SpyOpt::printAgents() const
 {
     for(const auto& agent : agents_)
     {
@@ -98,14 +98,14 @@ void SpyAlgorithm::printAgents() const
     }
 }
 
-void SpyAlgorithm::printBestAgent() const
+void SpyOpt::printBestAgent() const
 {
     std::cout << agents_.front() << std::endl;
 }
 
 /* Private methods */
 
-void SpyAlgorithm::generateAgents(std::function<double(const std::vector<double>&)> objective_func)
+void SpyOpt::generateAgents(std::function<double(const std::vector<double>&)> objective_func)
 {
     agents_.reserve(config_.num_agents);
     for(size_t i = 0; i < config_.num_agents; ++i)
@@ -122,7 +122,7 @@ void SpyAlgorithm::generateAgents(std::function<double(const std::vector<double>
     // printAgents();
 }
 
-std::vector<double> SpyAlgorithm::generateRandomPosition()
+std::vector<double> SpyOpt::generateRandomPosition()
 {
     std::vector<double> pos(config_.input_dim);
     for (size_t i = 0, n = pos.size(); i < n; ++i)
@@ -133,12 +133,12 @@ std::vector<double> SpyAlgorithm::generateRandomPosition()
     return pos;
 }
 
-void SpyAlgorithm::sortAgents()
+void SpyOpt::sortAgents()
 {
     std::sort(agents_.begin(), agents_.end());
 }
 
-void SpyAlgorithm::validateConfig() const
+void SpyOpt::validateConfig() const
 {
         if (config_.num_agents <= 0 || config_.num_high_rank <= 0 || config_.num_mid_rank <= 0)
         {
@@ -171,7 +171,7 @@ void SpyAlgorithm::validateConfig() const
         }
 }
 
-void SpyAlgorithm::printProgress(size_t iteration)
+void SpyOpt::printProgress(size_t iteration)
 {
     // convert zero-origin to one-origin
     iteration += 1;
@@ -199,9 +199,9 @@ void SpyAlgorithm::printProgress(size_t iteration)
                 std::cout << " ";
             }
         }
-        auto old_precision = std::cout.precision();
+        auto precision_backup = std::cout.precision();
         std::cout << "] " << std::setw(5) << std::fixed << std::setprecision(1) << progress * 100.0 << "%\r";
-        std::cout.precision(old_precision);
+        std::cout.precision(precision_backup);
         std::cout.flush();
         last_printed_progress_ = iteration;
     }

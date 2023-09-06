@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(SpyAlgorithm CXX)
+project(SpyOpt CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -13,7 +13,7 @@ include_directories(
 
 add_library(${PROJECT_NAME}
     src/agent.cpp
-    src/spy_algorithm.cpp
+    src/spy_opt.cpp
     src/config_parser.cpp
 )
 

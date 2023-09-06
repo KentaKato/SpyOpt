@@ -1,8 +1,8 @@
-#ifndef SPY_ALGORITHM__CONFIG_PARSER_H
-#define SPY_ALGORITHM__CONFIG_PARSER_H
+#ifndef SPY_OPT__CONFIG_PARSER_H
+#define SPY_OPT__CONFIG_PARSER_H
 
 #include <yaml-cpp/yaml.h>
-#include "spy_algorithm/spy_algorithm.h"
+#include "SpyOpt/spy_opt.h"
 
 namespace spy
 {

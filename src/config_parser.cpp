@@ -1,8 +1,8 @@
 #include <iostream>
 #include <filesystem>
 
-#include "spy_algorithm/spy_algorithm.h"
-#include "spy_algorithm/config_parser.h"
+#include "SpyOpt/spy_opt.h"
+#include "SpyOpt/config_parser.h"
 
 namespace spy
 {
