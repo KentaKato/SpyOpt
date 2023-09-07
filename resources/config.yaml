@@ -1,9 +1,15 @@
-num_agents:    100  # greater than (num_high_rank + num_mid_rank)
+num_agents:    50  # greater than (num_high_rank + num_mid_rank)
 num_high_rank: 10
 num_mid_rank:  30
 
 num_iterations: 50
 
 swing_factor: 1
-lower_bounds: [-10., -10.]
-upper_bounds: [10., 10.]
+
+# Booth function
+# lower_bounds: [-10., -10.]
+# upper_bounds: [10., 10.]
+
+# Eggholder function
+lower_bounds: [-512., -512.]
+upper_bounds: [512., 512.]

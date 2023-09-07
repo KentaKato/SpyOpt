@@ -18,21 +18,23 @@ Agent::Agent(size_t id,
       rand_engine_(rand_engine),
       fitness(objective_func(init_pos))
 {
-    history.reserve(max_iteration);
-    history.push_back(position_);
+    pos_history.reserve(max_iteration);
+    pos_history.emplace_back(position_);
+
+    fitness_history.reserve(max_iteration);
+    fitness_history.emplace_back(fitness);
 }
 
 void Agent::swingMove(size_t time, double swing_factor)
 {
     static std::uniform_real_distribution<> uniform_dist(-1, 1);
-    for(size_t i = 0, n = position_.size(); i < n; ++i)
     for(auto &pos : position_) {
         pos += uniform_dist(rand_engine_) * (swing_factor / time);
     }
     this->clipPosition();
     fitness = objective_func_(position_);
-    history.push_back(position_);
-    if (fitness>700)std::cout << id << ", " << fitness << ", [" << position_[0] << ", " << position_[1] << "]" <<std::endl;
+    pos_history.emplace_back(position_);
+    fitness_history.emplace_back(fitness);
 }
 
 void Agent::moveToward(const Agent &better_agent)
@@ -42,9 +44,10 @@ void Agent::moveToward(const Agent &better_agent)
     {
         position_[i] += uniform_dist(rand_engine_) * (better_agent.getPosition()[i] - position_[i]);
     }
+    this->clipPosition();
     fitness = objective_func_(position_);
-    history.push_back(position_);
-    if (fitness>700)std::cout << id << ", " << fitness << ", [" << position_[0] << ", " << position_[1] << "]" <<std::endl;
+    pos_history.emplace_back(position_);
+    fitness_history.emplace_back(fitness);
 }
 
 void Agent::randomSearch()
@@ -55,9 +58,10 @@ void Agent::randomSearch()
         const double range = upper_bounds_[i] - lower_bounds_[i];
         position_[i] = lower_bounds_[i] + range * uniform_dist(rand_engine_);
     }
+    this->clipPosition();
     fitness = objective_func_(position_);
-    history.push_back(position_);
-    if (fitness>700)std::cout << id << ", " << fitness << ", [" << position_[0] << ", " << position_[1] << "]" <<std::endl;
+    pos_history.emplace_back(position_);
+    fitness_history.emplace_back(fitness);
 }
 
 const std::vector<double>& Agent::getPosition() const

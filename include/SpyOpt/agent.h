@@ -22,7 +22,8 @@ public:
                    const std::mt19937 &rand_engine);
     size_t id;
     double fitness;
-    std::vector<std::vector<double>> history;
+    std::vector<std::vector<double>> pos_history;
+    std::vector<double> fitness_history;
 
     void swingMove(size_t time, double swing_factor);
     void moveToward(const Agent &better_agent);

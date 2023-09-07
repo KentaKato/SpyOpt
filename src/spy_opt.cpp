@@ -34,7 +34,7 @@ std::ostream& operator<<(std::ostream& os, const Config& config)
     os << "\n  input_dim: " << config.input_dim;
     os << "\n  lower_bounds: ";
     print_vec(config.lower_bounds);
-    os << "\n upper_bounds: ";
+    os << "\n  upper_bounds: ";
     print_vec(config.upper_bounds);
     return os;
 }
@@ -42,8 +42,8 @@ std::ostream& operator<<(std::ostream& os, const Config& config)
 /* Public methods */
 
 SpyOpt::SpyOpt(const Config &config,
-                           std::function<double(const std::vector<double>&)> objective_func)
-                           : config_(config), uniform_dist_(0., 1.)
+               std::function<double(const std::vector<double>&)> objective_func)
+               : config_(config), uniform_dist_(0., 1.)
 {
     this->validateConfig();
     std::random_device rd;
@@ -54,24 +54,20 @@ SpyOpt::SpyOpt(const Config &config,
 void SpyOpt::optimize()
 {
     static const size_t num_high_mid = config_.num_high_rank + config_.num_mid_rank;
-
     for(size_t t = 1; t < config_.num_iterations; ++t)
     {
-        for(size_t i = 0, n = agents_.size(); i < n; ++i)
+        for(size_t i = 0; i < config_.num_high_rank; ++i)
         {
-            if(i < config_.num_high_rank)
-            {
-                agents_[i].swingMove(t, config_.swing_factor);
-            }
-            else if (i < num_high_mid)
-            {
-                std::uniform_int_distribution<> rand(0, i-1);
-                agents_[i].moveToward(agents_[rand(rand_engine_)]);
-            }
-            else
-            {
-                agents_[i].randomSearch();
-            }
+            agents_[i].swingMove(t, config_.swing_factor);
+        }
+        for(size_t i = config_.num_high_rank; i < num_high_mid; ++i)
+        {
+            std::uniform_int_distribution<> rand(0, i-1);
+            agents_[i].moveToward(agents_[rand(rand_engine_)]);
+        }
+        for(size_t i = num_high_mid; i < config_.num_agents; ++i)
+        {
+            agents_[i].randomSearch();
         }
         this->sortAgentsByFitness();
         this->printProgress(t);
@@ -238,15 +234,15 @@ void SpyOpt::dumpHistory(const std::string &filename)
     file << "\n";
 
     this->sortAgentsByID();
-    const size_t max_itr = agents_.at(0).history.size();
+    const size_t max_itr = agents_.at(0).pos_history.size();
     for (size_t itr = 0; itr < max_itr; ++itr)
     {
         for (const auto &agent : agents_)
         {
             file << itr;
             file << ", " << agent.id;
-            file << ", " << agent.fitness;
-            for (const auto &pi : agent.history.at(itr))
+            file << ", " << agent.fitness_history.at(itr);
+            for (const auto &pi : agent.pos_history.at(itr))
             {
                 file << ", " << pi;
             }
