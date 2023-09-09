@@ -22,10 +22,10 @@ target_link_libraries(${PROJECT_NAME}
   ${YAML_CPP_LIBRARIES}
 )
 
-add_executable(main
+add_executable(spyopt
   src/main.cpp
 )
 
-target_link_libraries(main
+target_link_libraries(spyopt
   ${PROJECT_NAME}
 )
