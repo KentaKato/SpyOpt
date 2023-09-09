@@ -10,6 +10,7 @@ namespace spy_opt
 
 struct Config
 {
+    std::string objective_func_name;
     size_t num_agents;
     size_t num_high_rank, num_mid_rank;
     size_t num_iterations;
@@ -24,7 +25,7 @@ class SpyOpt
 
 public:
     explicit SpyOpt(const Config &config,
-                          std::function<double(const std::vector<double>&)> objective_func);
+                    std::function<double(const std::vector<double>&)> objective_func);
     void optimize();
 
     // return [fitness, position]

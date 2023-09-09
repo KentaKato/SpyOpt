@@ -2,28 +2,12 @@
 
 #include "SpyOpt/config_parser.h"
 #include "SpyOpt/spy_opt.h"
+#include "SpyOpt/objective_functions.h"
 
 using namespace spy_opt;
 
 int main()
 {
-    // Booth function: f(1, 3)=0
-    auto booth_func = [](const std::vector<double> &pos) -> double
-    {
-        double x = pos[0];
-        double y = pos[1];
-        return std::pow(x + 2. * y - 7., 2.) + std::pow(2. * x + y - 5., 2.);
-    };
-
-    // Eggholder function: f(512, 404.2319)=-959.6407
-    auto eggholder_func = [](const std::vector<double> &pos) -> double
-    {
-        double x = pos[0];
-        double y = pos[1];
-        return -(y + 47) * sin(sqrt(abs(x/2 + (y+47))))
-            - x * sin(sqrt(abs(x - (y+47))));
-    };
-
     Config config;
     if (!parseConfig("../resources/config.yaml", config))
     {
@@ -32,7 +16,29 @@ int main()
     }
     std::cout << config << std::endl;
 
-    SpyOpt spy_alg(config, eggholder_func);
+    std::function<double(const std::vector<double>&)> objective_function;
+    if (config.objective_func_name == "Booth")
+    {
+        std::cout << "Using Booth function." << std::endl;
+        objective_function = booth_func;
+    }
+    else if (config.objective_func_name == "Eggholder")
+    {
+        std::cout << "Using Eggholder function." << std::endl;
+        objective_function = eggholder_func;
+    }
+    else if (config.objective_func_name == "Ackley")
+    {
+        std::cout << "Using Ackley function." << std::endl;
+        objective_function = ackley_function;
+    }
+    else
+    {
+        std::cerr << "[Error] Invalid objective function name." << std::endl;
+        return -1;
+    }
+
+    SpyOpt spy_alg(config, objective_function);
     spy_alg.optimize();
     const auto [fitness, pos] = spy_alg.getBestFitness();
     std::cout << "Best solution:" << std::endl;

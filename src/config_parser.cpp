@@ -24,7 +24,8 @@ namespace spy_opt
             !safeLoadScalar(node, "num_iterations", config.num_iterations) ||
             !safeLoadScalar(node, "swing_factor", config.swing_factor) ||
             !safeLoadVector(node, "lower_bounds", config.lower_bounds) ||
-            !safeLoadVector(node, "upper_bounds", config.upper_bounds))
+            !safeLoadVector(node, "upper_bounds", config.upper_bounds) ||
+            !safeLoadScalar(node, "objective_function", config.objective_func_name))
         {
             return false;
         }

@@ -1,15 +1,21 @@
 num_agents:    50  # greater than (num_high_rank + num_mid_rank)
 num_high_rank: 10
-num_mid_rank:  30
+num_mid_rank:  25
 
 num_iterations: 50
 
-swing_factor: 1
+swing_factor: 0.1
 
-# Booth function
+objective_function: Ackley # Booth, Eggholder, Ackley
+
+# Booth Function
 # lower_bounds: [-10., -10.]
 # upper_bounds: [10., 10.]
 
-# Eggholder function
-lower_bounds: [-512., -512.]
-upper_bounds: [512., 512.]
+# Eggholder Function
+# lower_bounds: [-512., -512.]
+# upper_bounds: [512., 512.]
+
+# Ackley Function
+lower_bounds: [-5., -5.]
+upper_bounds: [5., 5.]

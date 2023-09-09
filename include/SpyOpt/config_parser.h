@@ -22,6 +22,18 @@ bool safeLoadScalar(const YAML::Node &node, const std::string &key, T &value)
 }
 
 template <typename T>
+bool safeLoadStrint(const YAML::Node &node, const std::string &key, T &value)
+{
+    if (node[key] && node[key].IsScalar())
+    {
+        value = node[key].as<T>();
+        return true;
+    }
+    std::cerr << "[Error] Invalid or missing '" << key << "' in config." << std::endl;
+    return false;
+}
+
+template <typename T>
 bool safeLoadVector(const YAML::Node &node, const std::string &key, std::vector<T> &vec)
 {
     if (node[key] && node[key].IsSequence())
