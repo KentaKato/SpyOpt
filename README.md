@@ -8,9 +8,11 @@
 ## Demo
 
 **Ackley Function**
+
 <img src=".readme/ackley_func.gif" width="500">
 
 **Eggholder Function**
+
 <img src=".readme/eggholder_func.gif" width="500">
 
 ## Requirement
