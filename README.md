@@ -63,7 +63,7 @@ This will produce the executable file `spyopt` in the `build` directory.
     ./spyopt
     ```
 
-    The results will be saved in `results/history.yaml`.
+    The results will be saved in `results/history.csv`.
 
 2. **Animation of Otimization History**
 
