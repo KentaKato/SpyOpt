@@ -2,6 +2,7 @@
 
 `SpyOpt` is a C++ implementation of the metaheuristic spy_algorithm [1]. It can search for global optimal solutions for arbitrary non-convex functions.
 
+(Japanese)
 `SpyOpt` はメタヒューリスティクスである `spy_algorithm` [1] の C++ 実装です。
 任意の非凸関数に対し、大域最適解を探索することができます。
 
