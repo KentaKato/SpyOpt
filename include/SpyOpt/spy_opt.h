@@ -27,12 +27,15 @@ public:
     explicit SpyOpt(const Config &config,
                     std::function<double(const std::vector<double>&)> objective_func);
     void optimize();
+    void reset();
 
-    // return [fitness, position]
+    // return: [fitness, position]
     std::pair<double, std::vector<double>> getBestFitness() const;
+
     void printAgents() const;
     void printBestAgent() const;
-    void dumpHistory(const std::string &filename);
+    void dumpAgentsHistory(const std::string &filename);
+    void dumpBestSolutionHistory(const std::string &filename);
 
 private:
     void generateAgents(std::function<double(const std::vector<double>&)> objective_func);
@@ -43,8 +46,11 @@ private:
     void printInitialConditions() const;
     void printFinalConditions() const;
     void printProgress(size_t iteration);
+    void updateHistory();
 
     std::vector<Agent> agents_;
+    std::vector<double> best_fitness_history_;
+    std::vector<std::vector<double>> best_pos_history_;
 
     std::mt19937 rand_engine_;
     std::uniform_real_distribution<> uniform_dist_;

@@ -25,6 +25,7 @@ public:
     std::vector<std::vector<double>> pos_history;
     std::vector<double> fitness_history;
 
+    void reset(const std::vector<double> &init_pos);
     void swingMove(size_t time, double swing_factor);
     void moveToward(const Agent &better_agent);
     void randomSearch();
