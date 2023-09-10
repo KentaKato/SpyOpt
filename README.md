@@ -11,15 +11,15 @@
 **Ackley Function**
 
 <p float="left">
-  <img src=".readme/ackley_func.gif" width="500" />
-  <img src=".readme/Ackley_300epoch.png" width="500" />
+  <img src=".readme/ackley_func.gif" width="400" />
+  <img src=".readme/Ackley_300epoch.png" width="400" />
 </p>
 
 **Eggholder Function**
 
 <p float="left">
-    <img src=".readme/eggholder_func.gif" width="500">
-    <img src=".readme/Eggholder_300epoch.png" width="500" />
+    <img src=".readme/eggholder_func.gif" width="400">
+    <img src=".readme/Eggholder_300epoch.png" width="400" />
 </p>
 
 ## Requirement
