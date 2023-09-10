@@ -10,11 +10,17 @@
 
 **Ackley Function**
 
-<img src=".readme/ackley_func.gif" width="500">
+<p float="left">
+  <img src=".readme/ackley_func.gif" width="500" />
+  <img src=".readme/Ackley_300epoch.png" width="500" />
+</p>
 
 **Eggholder Function**
 
-<img src=".readme/eggholder_func.gif" width="500">
+<p float="left">
+    <img src=".readme/eggholder_func.gif" width="500">
+    <img src=".readme/Eggholder_300epoch.png" width="500" />
+</p>
 
 ## Requirement
 
@@ -63,13 +69,13 @@ This will produce the executable file `spyopt` in the `build` directory.
     ./spyopt
     ```
 
-    The results will be saved in `results/history.yaml`.
+    The results will be saved in `results/agents_history.yaml` and `results/best_solution_history.csv`.
 
-2. **Animation of Otimization History**
+2. **Animation of History of Agents' Motion**
 
     ```bash
     cd SpyOpt
-    python3 scripts/create_history_animation.py
+    python3 scripts/agents_motion_gif.py
     ```
 
     The gif file will be saved in current directory.
@@ -137,7 +143,8 @@ objective_function: Ackley # Booth, Eggholder, Ackley
         const auto [fitness, pos] = spy_alg.getBestFitness();
         std::cout << "Best solution:" << std::endl;
         spy_alg.printBestAgent();
-        spy_alg.dumpHistory("results/history.csv");
+        spy_alg.dumpAgentsHistory("../results/agents_history.csv");
+        spy_alg.dumpBestSolutionHistory("../results/best_solution_history.csv");
 
         return 0;
     }

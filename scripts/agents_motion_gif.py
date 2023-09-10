@@ -86,7 +86,7 @@ def main():
                                                                                      RANGE_X,
                                                                                      RANGE_Y)
 
-    df = pd.read_csv("../results/history.csv")
+    df = pd.read_csv("../results/agents_history.csv")
     iterations = df["iteration"].unique()
 
     # list for save the temporary images

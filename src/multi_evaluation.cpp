@@ -8,6 +8,8 @@ using namespace spy_opt;
 
 int main()
 {
+    size_t MAX_EPOCH = 300;
+
     Config config;
     if (!parseConfig("../resources/config.yaml", config))
     {
@@ -39,12 +41,14 @@ int main()
     }
 
     SpyOpt spy_alg(config, objective_function);
-    spy_alg.optimize();
-    const auto [fitness, pos] = spy_alg.getBestFitness();
-    std::cout << "Best solution:" << std::endl;
-    spy_alg.printBestAgent();
-    spy_alg.dumpAgentsHistory("../results/agents_history.csv");
-    spy_alg.dumpBestSolutionHistory("../results/best_solution_history.csv");
+    for (size_t epoch = 0; epoch < MAX_EPOCH; ++epoch)
+    {
+        spy_alg.reset();
+        spy_alg.optimize();
+        const auto [fitness, pos] = spy_alg.getBestFitness();
+        spy_alg.dumpBestSolutionHistory("../results/multi_evaluation/best_solution_history_" + std::to_string(epoch) + ".csv");
+        spy_alg.dumpAgentsHistory("../results/multi_evaluation/agents_history_" + std::to_string(epoch) + ".csv");
+    }
 
     return 0;
 }

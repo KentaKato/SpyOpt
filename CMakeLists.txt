@@ -29,3 +29,11 @@ add_executable(spyopt
 target_link_libraries(spyopt
   ${PROJECT_NAME}
 )
+
+add_executable(multi_eval
+  src/multi_evaluation.cpp
+)
+
+target_link_libraries(multi_eval
+  ${PROJECT_NAME}
+)

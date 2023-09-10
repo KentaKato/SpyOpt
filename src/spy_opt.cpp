@@ -24,7 +24,6 @@ std::ostream& operator<<(std::ostream& os, const Config& config)
         }
         os << "]";
     };
-
     os << "Config:";
     os << "\n  num_agents: " << config.num_agents;
     os << "\n  num_high_rank: " << config.num_high_rank;
@@ -49,6 +48,10 @@ SpyOpt::SpyOpt(const Config &config,
     std::random_device rd;
     rand_engine_.seed(rd());
     this->generateAgents(objective_func);
+
+    best_fitness_history_.reserve(config_.num_iterations);
+    best_pos_history_.reserve(config_.num_iterations);
+    this->updateHistory();
 }
 
 void SpyOpt::optimize()
@@ -71,7 +74,20 @@ void SpyOpt::optimize()
         }
         this->sortAgentsByFitness();
         this->printProgress(t);
+        this->updateHistory();
     }
+}
+
+void SpyOpt::reset()
+{
+    last_printed_progress_ = 0;
+    best_fitness_history_.clear();
+    best_pos_history_.clear();
+    for (auto& agent : agents_)
+    {
+        agent.reset(this->generateRandomPosition());
+    }
+    this->updateHistory();
 }
 
 std::pair<double, std::vector<double>> SpyOpt::getBestFitness() const
@@ -86,7 +102,7 @@ std::pair<double, std::vector<double>> SpyOpt::getBestFitness() const
 
 void SpyOpt::printAgents() const
 {
-    for(const auto& agent : agents_)
+    for (const auto& agent : agents_)
     {
         std::cout << "  " << agent << std::endl;
     }
@@ -95,6 +111,61 @@ void SpyOpt::printAgents() const
 void SpyOpt::printBestAgent() const
 {
     std::cout << agents_.front() << std::endl;
+}
+
+void SpyOpt::dumpBestSolutionHistory(const std::string &filename)
+{
+    std::ofstream file(filename);
+
+    // header
+    file << "iteration,fitness";
+    for (size_t itr = 0; itr < config_.input_dim; ++itr)
+    {
+        file << ",x" << itr;
+    }
+    file << "\n";
+
+    const size_t max_itr = best_pos_history_.size();
+    for (size_t itr = 0; itr < max_itr; ++itr)
+    {
+        file << itr;
+        file << ", " << best_fitness_history_.at(itr);
+        for (const auto &pi : best_pos_history_.at(itr))
+        {
+            file << ", " << pi;
+        }
+        file << "\n";
+    }
+}
+
+void SpyOpt::dumpAgentsHistory(const std::string &filename)
+{
+    std::ofstream file(filename);
+
+    // header
+    file << "iteration,agent_id,fitness";
+    for (size_t itr = 0; itr < config_.input_dim; ++itr)
+    {
+        file << ",x" << itr;
+    }
+    file << "\n";
+
+    this->sortAgentsByID();
+    const size_t max_itr = agents_.at(0).pos_history.size();
+    for (size_t itr = 0; itr < max_itr; ++itr)
+    {
+        for (const auto &agent : agents_)
+        {
+            file << itr;
+            file << ", " << agent.id;
+            file << ", " << agent.fitness_history.at(itr);
+            for (const auto &pi : agent.pos_history.at(itr))
+            {
+                file << ", " << pi;
+            }
+            file << "\n";
+        }
+    }
 }
 
 /* Private methods */
@@ -221,34 +292,10 @@ void SpyOpt::printProgress(size_t iteration)
     }
 }
 
-void SpyOpt::dumpHistory(const std::string &filename)
+void SpyOpt::updateHistory()
 {
-    std::ofstream file(filename);
-
-    // header
-    file << "iteration,agent_id,fitness";
-    for (size_t itr = 0; itr < config_.input_dim; ++itr)
-    {
-        file << ",x" << itr;
-    }
-    file << "\n";
-
-    this->sortAgentsByID();
-    const size_t max_itr = agents_.at(0).pos_history.size();
-    for (size_t itr = 0; itr < max_itr; ++itr)
-    {
-        for (const auto &agent : agents_)
-        {
-            file << itr;
-            file << ", " << agent.id;
-            file << ", " << agent.fitness_history.at(itr);
-            for (const auto &pi : agent.pos_history.at(itr))
-            {
-                file << ", " << pi;
-            }
-            file << "\n";
-        }
-    }
+    best_fitness_history_.emplace_back(agents_.front().fitness);
+    best_pos_history_.emplace_back(agents_.front().getPosition());
 }
 
 } // namespace spy_opt

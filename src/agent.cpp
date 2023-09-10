@@ -20,8 +20,17 @@ Agent::Agent(size_t id,
 {
     pos_history.reserve(max_iteration);
     pos_history.emplace_back(position_);
-
     fitness_history.reserve(max_iteration);
+    fitness_history.emplace_back(fitness);
+}
+
+void Agent::reset(const std::vector<double> &init_pos)
+{
+    position_ = init_pos;
+    fitness = objective_func_(init_pos);
+    pos_history.clear();
+    pos_history.emplace_back(position_);
+    fitness_history.clear();
     fitness_history.emplace_back(fitness);
 }
 
