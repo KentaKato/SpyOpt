@@ -31,7 +31,7 @@ namespace spy_opt
         }
         config.input_dim = config.lower_bounds.size();
     }
-    catch (const YAML::Exception& e)
+    catch (const YAML::Exception &e)
     {
         std::cerr << "[Error] Failed to parse the config file: " << e.what() << std::endl;
         return false;

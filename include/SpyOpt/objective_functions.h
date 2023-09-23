@@ -24,7 +24,7 @@ namespace spy_opt {
     }
 
     // Ackley function: f(0, 0)=0
-    double ackley_function(const std::vector<double>& pos)
+    double ackley_function(const std::vector<double> &pos)
     {
         const double x = pos[0];
         const double y = pos[1];

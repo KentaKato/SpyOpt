@@ -9,7 +9,7 @@
 namespace spy_opt
 {
 
-std::ostream& operator<<(std::ostream& os, const Config& config)
+std::ostream& operator<<(std::ostream &os, const Config &config)
 {
     auto print_vec = [&](const auto &vec)
     {
@@ -83,7 +83,7 @@ void SpyOpt::reset()
     last_printed_progress_ = 0;
     best_fitness_history_.clear();
     best_pos_history_.clear();
-    for (auto& agent : agents_)
+    for (auto &agent : agents_)
     {
         agent.reset(this->generateRandomPosition());
     }
@@ -102,7 +102,7 @@ std::pair<double, std::vector<double>> SpyOpt::getBestFitness() const
 
 void SpyOpt::printAgents() const
 {
-    for (const auto& agent : agents_)
+    for (const auto &agent : agents_)
     {
         std::cout << "  " << agent << std::endl;
     }

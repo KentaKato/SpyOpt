@@ -31,8 +31,8 @@ public:
     void randomSearch();
     const std::vector<double>& getPosition() const;
 
-    friend bool operator<(const Agent& lhs, const Agent& rhs);
-    friend std::ostream& operator<<(std::ostream& os, const Agent& agent);
+    friend bool operator<(const Agent &lhs, const Agent &rhs);
+    friend std::ostream& operator<<(std::ostream &os, const Agent &agent);
 
 private:
     void clipPosition();

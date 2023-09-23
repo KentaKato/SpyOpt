@@ -91,7 +91,7 @@ bool operator<(const Agent &lhs, const Agent &rhs)
     return lhs.fitness < rhs.fitness;
 }
 
-std::ostream& operator<<(std::ostream& os, const Agent& agent)
+std::ostream& operator<<(std::ostream &os, const Agent &agent)
 {
     os << "Agent ID: " << agent.id;
     os << ", pos: [";

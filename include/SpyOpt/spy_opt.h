@@ -18,7 +18,7 @@ struct Config
     std::vector<double> lower_bounds, upper_bounds;
     size_t input_dim;
 };
-std::ostream& operator<<(std::ostream& os, const Config& config);
+std::ostream& operator<<(std::ostream &os, const Config &config);
 
 class SpyOpt
 {
