@@ -69,7 +69,7 @@ This will produce the executable file `spyopt` in the `build` directory.
     ./spyopt
     ```
 
-    The results will be saved in `results/agents_history.yaml` and `results/best_solution_history.csv`.
+    The results will be saved in `results/agents_history.csv` and `results/best_solution_history.csv`.
 
 2. **Animation of History of Agents' Motion**
 
